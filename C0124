@@ -1,0 +1,88 @@
+/***
+*	C0124
+*	C程序的简单的语法查找错误程序
+***/
+
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<windows.h>
+#include<conio.h>
+#define N 2000
+
+int main()
+{
+	int filetag=0;
+	while(1){
+	char add[20];
+	if(filetag==0){
+		printf("请输入需要检测的源文件的地址（小于20个字节）：\n");
+		scanf("%s",add);
+	}else{
+		printf("请按任意键退出！……\n");
+		getch();
+		exit(0);
+	}
+	strcat(add,".txt");
+	FILE *fp = fopen(add,"r");
+	if(fp==NULL){
+		printf("错误:未找到文件\"%s\"!!\n",add);
+		for(int j=0;j<=5;j++){
+			system("cls");
+			printf("错误:未找到文件\"%s\"!!\n",add);
+			printf("    窗口将在%d秒后关闭!\n",5-j);
+			for(int k=0;k<10*(5-j);k++)
+				printf("#");
+			printf("\n");
+			Sleep(1000);
+		}
+		exit(0);
+	}
+	else
+		filetag=1;
+	char t[N];
+	fread(t,sizeof(char),N-1,fp);
+	t[N]='\n';
+	int kuohao[20]={0},fangkh[20]={0},huakh[20]={0};
+	int *k,*f,*h,i=0,tag=0,yhtag=0;
+	k=kuohao;
+	f=fangkh;
+	h=huakh;
+	while(t[i]!='\0'){
+		if(yhtag==1){
+			if(t[i]=='"')
+				yhtag=0;
+		}
+		else if(t[i]=='"')
+			yhtag=1;
+		else{
+			if(i<N-4&&t[i]=='m'&&t[i+1]=='a'&&t[i+2]=='i'&&t[i+3]=='n')
+				tag++;
+			if(t[i]=='(')
+				*(k++)=1;
+			if(t[i]==')')
+				*(--k)=0;
+			if(t[i]=='[')
+				*(f++)=1;
+			if(t[i]==']')
+				*(--f)=0;
+			if(t[i]=='{')
+				*(h++)=1;
+			if(t[i]=='}')
+				*(--h)=0;
+		}
+		i++;
+	}
+	if(tag==0)
+		printf("缺少主函数!\n");
+	else if(tag!=1)
+		printf("有超过一个的主函数!\n");
+	if(*kuohao != 0)
+		printf("文件中缺少\"(\"或\")\".\n");
+	if(*fangkh != 0)
+		printf("文件中缺少\"[\"或\"]\".\n");
+	if(*huakh != 0)
+		printf("文件中缺少\"{\"或\"}\".\n");
+	}
+	return 0;
+}
