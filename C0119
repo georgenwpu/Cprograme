@@ -1,0 +1,21 @@
+/***
+*C0119
+*将输入的的字符串反转
+***/
+
+#include<stdio.h>
+
+int main()
+{
+	char s[100],*p;
+	scanf("%s",s);
+	p=s;
+	int n=0;
+	while(*p++!='\0')
+		n++;
+	p--;
+	for(int i=n;i>=0;i--)
+		putchar(*--p);
+	printf("\n");
+	return 0;
+}
