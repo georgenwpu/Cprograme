@@ -1,0 +1,60 @@
+/***
+*	C0113
+*	绘制单词长度的频数分布直方图
+***/
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
+
+void show(int a,int n){
+	if(a==20)	printf("20+:");
+	else	printf(" %2d:",a);
+	for(int i=0;i<n;i++)	printf("*");
+	printf("(%d)\n",n);
+}
+int main(){
+	char text[1000];
+	int n[20]={0},i,m=1;
+	int pic[40][20]={0};
+	FILE *fp=fopen("t.txt","r");
+	if(fp==NULL){
+		printf("Error:cam`t open the file text.txt!\n");
+		exit(0);
+	}
+	fgets(text,1000,fp);
+	fclose(fp);
+	for(i=0;text[i]!='\0';i++){
+		if(!isspace(text[i])){
+			if(isalpha(text[i])&&(isalpha(text[i+1])))
+				m++;
+			else{
+				m<19?n[m-1]++:n[19]++;
+				m=1;
+			}
+		}
+	}
+	for(i=0;i<20;i++)
+		for(int j=0;j<n[i];j++)
+			pic[j][i]=1;
+	printf("*****单词长度的统计分布直方图(横向)*****\n");
+	for(i=0;i<20;i++)
+		show(i+1,n[i]);
+	printf("*****单词长度的统计分布直方图(竖向)*****\n");
+	for(i=39;i>=0;i--){
+		printf("\t");
+		for(int j=0;j<20;j++){
+			if(pic[i][j]==1)
+				printf(" * ");
+			else
+				printf("   ");
+		}
+		printf("\n");
+	}
+	printf("长度:\t");
+	for(i=1;i<=19;i++)
+		if(i<=9) printf(" %d ",i);
+		else	printf(" %2d",i);
+	printf(" 20+\n");
+	return 0;
+}
